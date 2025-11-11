@@ -63,7 +63,20 @@ export async function authentication(configuration: Configuration) {
 
 		// states
 		subscribeEntities(conn, (hassEntities) => {
-			states.set(hassEntities);
+			/**
+			 * `subscribeEntities` mutates the same object reference internally.
+			 * Deep-ish clone each entity so Svelte reacts to every update.
+			 */
+			const cloned = Object.fromEntries(
+				Object.entries(hassEntities || {}).map(([entityId, entity]) => [
+					entityId,
+					{
+						...entity,
+						attributes: { ...(entity?.attributes || {}) }
+					}
+				])
+			);
+			states.set(cloned);
 		});
 
 		// config

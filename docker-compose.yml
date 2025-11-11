@@ -1,13 +1,13 @@
 services:
-  ha-fusion:
-    container_name: ha-fusion
-    image: ghcr.io/matt8707/ha-fusion
+  fusion-revive:
+    container_name: fusion-revive
+    image: ghcr.io/slemens/fusion-revive
     volumes:
-      - /path/to/ha-fusion:/app/data
+      - /path/to/fusion-revive:/app/data
     network_mode: bridge
     ports:
       - 5050:5050
     environment:
-      TZ: Europe/Stockholm
-      HASS_URL: http://192.168.1.241:8123
+      TZ: Europe/Berlin
+      HASS_URL: http://192.168.1.X:8123
     restart: always

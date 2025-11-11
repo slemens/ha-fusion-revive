@@ -6,6 +6,10 @@ views:
         sections:
           - name: Ankleide
             items:
+              - id: 5537527668099
+                type: graph
+                entities:
+                  - entity_id: sensor.tasmota_energy_apparentpower
               - id: 2051119982455
                 type: button
                 entity_id: sensor.serverschrank_last_restart_time
@@ -224,6 +228,7 @@ sidebar:
     type: graph
     entities:
       - entity_id: sensor.casa_lemens_strompreis
+        alias: Strompreis
     stroke: 2
     period: day
     name: Strompreis

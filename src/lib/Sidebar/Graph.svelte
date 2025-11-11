@@ -5,7 +5,7 @@ import type { ScaleLinear, ScaleLogarithmic } from 'd3-scale';
 	import { line, curveMonotoneX } from 'd3-shape';
 	import { extent, bisector } from 'd3-array';
 import { getName } from '$lib/Utils';
-	import { onDestroy } from 'svelte';
+import { onDestroy } from 'svelte';
 
 	type ScaleMode = 'auto' | 'zero' | 'custom';
 	type ScaleType = 'linear' | 'log';
@@ -81,6 +81,7 @@ let seriesScales: Map<
 > = new Map();
 let hoverCoords: { x: number; y: number } | undefined;
 let tooltipPosition: { left: number; top: number } | undefined;
+let chartElement: HTMLDivElement | undefined;
 
 $: tooltipPosition =
 	hoverCoords && width
@@ -316,13 +317,26 @@ function getSeriesSettings(entity_id: string): ScaleSettings {
 
 	$: if (editable && hovering) hovering = false;
 
-	$: hoverLabel =
-		hovering && hoverTimestamp
-			? new Intl.DateTimeFormat($selectedLanguage, {
-					weekday: 'short',
-					timeStyle: 'short'
-				}).format(hoverTimestamp)
-			: undefined;
+	function formatHoverLabel(date: Date | undefined) {
+		if (!date) return undefined;
+		const locale = $selectedLanguage || undefined;
+
+		const tryFormat = (options: Intl.DateTimeFormatOptions) => {
+			try {
+				return new Intl.DateTimeFormat(locale, options).format(date);
+			} catch {
+				return undefined;
+			}
+		};
+
+		return (
+			tryFormat({ dateStyle: 'short', timeStyle: 'short' }) ||
+			tryFormat({ weekday: 'short', hour: '2-digit', minute: '2-digit' }) ||
+			date.toLocaleString()
+		);
+	}
+
+	$: hoverLabel = hovering ? formatHoverLabel(hoverTimestamp) : undefined;
 
 	function fetchData() {
 		if (typeof window === 'undefined') return;
@@ -385,12 +399,12 @@ function getSeriesSettings(entity_id: string): ScaleSettings {
 		);
 	}
 
-	function handlePointerMove(event: PointerEvent) {
-		if (editable) return;
-		if (!xScale || !chartSeries.length) return;
-		hovering = true;
-		const bounds = (event.currentTarget as HTMLElement).getBoundingClientRect();
-		const x = event.clientX - bounds.left;
+function handlePointerMove(event: PointerEvent | MouseEvent) {
+	if (editable) return;
+	if (!xScale || !chartSeries.length) return;
+	hovering = true;
+	const bounds = (chartElement || (event.currentTarget as HTMLElement)).getBoundingClientRect();
+	const x = event.clientX - bounds.left;
 		const y = event.clientY - bounds.top;
 		hoverCoords = { x, y };
 
@@ -431,11 +445,11 @@ function getSeriesSettings(entity_id: string): ScaleSettings {
 		});
 	}
 
-	function handlePointerLeave() {
-		if (editable) return;
-		hovering = false;
-		hoverCoords = undefined;
-	}
+function handlePointerLeave() {
+	if (editable) return;
+	hovering = false;
+	hoverCoords = undefined;
+}
 
 function formatValue(value: number | undefined, fractionDigits: number) {
 	if (value === undefined || Number.isNaN(value)) return '—';
@@ -471,7 +485,6 @@ function formatValue(value: number | undefined, fractionDigits: number) {
 				<p class="subtitle">{hoverLabel}</p>
 			{/if}
 		</div>
-
 	</div>
 
 	{#if !resolvedEntities.length}
@@ -483,14 +496,27 @@ function formatValue(value: number | undefined, fractionDigits: number) {
 			class="chart"
 			class:editing={editable}
 			class:loading={!chartSeries.length}
+			role="presentation"
+			bind:this={chartElement}
 			bind:clientWidth={width}
 			bind:clientHeight={height}
 			on:pointermove={handlePointerMove}
 			on:pointerleave={handlePointerLeave}
+			on:mousemove={handlePointerMove}
+			on:mouseleave={handlePointerLeave}
 			style:transition={`opacity ${isResizing ? 0 : 150}ms ease`}
 		>
 			{#if chartSeries.length}
-				<svg width="100%" height="100%" role="img" aria-label={title}>
+				<svg
+					width="100%"
+					height="100%"
+					role="img"
+					aria-label={title}
+					on:pointermove={handlePointerMove}
+					on:pointerleave={handlePointerLeave}
+					on:mousemove={handlePointerMove}
+					on:mouseleave={handlePointerLeave}
+				>
 					{#each seriesPaths as series (series.entity_id)}
 						{#if series.path}
 							<path
@@ -594,6 +620,7 @@ function formatValue(value: number | undefined, fractionDigits: number) {
 		font-size: 0.8rem;
 		opacity: 0.7;
 	}
+
 
 	.empty-state {
 		font-size: 0.9rem;

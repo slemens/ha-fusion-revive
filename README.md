@@ -1,10 +1,10 @@
-# ha-fusion-revive
+# Fusion-Revive
 
 A modern, easy-to-use and performant fork of the original **ha-fusion** [Home Assistant](https://www.home-assistant.io/) dashboard.
 
-I created this fork because ha-fusion remains one of the most elegant and powerful dashboards for Home Assistant. Since the original maintainer (matt8707) no longer has time to actively continue development, **ha-fusion-revive** aims to keep the project alive, resolve issues, modernize areas of the codebase, and introduce improvements that many of us have been missing.
+I created this fork because ha-fusion remains one of the most elegant and powerful dashboards for Home Assistant. Since the original maintainer (matt8707) no longer has time to actively continue development, **Fusion-Revive** aims to keep the project alive, resolve issues, modernize areas of the codebase, and introduce improvements that many of us have been missing.
 
-I am not a full-time developer — just a passionate Home Assistant user — but I try my best in my free time to add meaningful features and improvements for myself and for everyone else who enjoys ha-fusion.
+I am not a full-time developer — just a passionate Home Assistant user — but I try my best in my free time to add meaningful features and improvements for myself and for everyone else who enjoys Fusion-Revive.
 
 <https://www.youtube.com/watch?v=D8mWruSuPOM>
 
@@ -34,7 +34,7 @@ If contributors are interested in helping revive and maintain the add-on, it may
 
 ### Docker
 
-If you're using the "Container" or "Core" installation methods, ha-fusion-revive can be installed via Docker.
+If you're using the "Container" or "Core" installation methods, Fusion-Revive can be installed via Docker.
 
 1. **Docker Compose File**: Place your edited copy of the `docker-compose.yml` from this repository in a suitable directory.
 
@@ -42,14 +42,14 @@ If you're using the "Container" or "Core" installation methods, ha-fusion-revive
 
 ```bash
 cd path/to/docker-compose.yml
-docker-compose up -d ha-fusion-revive
+docker-compose up -d fusion-revive
 ```
 
 #### Update
 
 ```bash
-docker-compose pull ha-fusion-revive
-docker-compose up -d ha-fusion-revive
+docker-compose pull fusion-revive
+docker-compose up -d fusion-revive
 ```
 
 <details>
@@ -59,14 +59,14 @@ Without docker-compose, updating requires stopping and removing the current cont
 
 ```bash
 docker run -d \
-  --name ha-fusion-revive \
+  --name fusion-revive \
   --network bridge \
   -p 5050:5050 \
-  -v /path/to/ha-fusion-revive:/app/data \
+  -v /path/to/fusion-revive:/app/data \
   -e TZ=Europe/Berlin \
   -e HASS_URL=http://192.168.1.X:8123 \
   --restart always \
-  ghcr.io/<YOUR_USER>/ha-fusion-revive
+  ghcr.io/<YOUR_USER>/fusion-revive
 ```
 
 #### Kubernetes
@@ -79,7 +79,7 @@ A Helm chart may be added in the future.
 
 ## Query Strings
 
-These will only function if ha-fusion-revive is exposed via a direct port (Docker). When using Ingress, query strings cannot be read.
+These will only function if Fusion-Revive is exposed via a direct port (Docker). When using Ingress, query strings cannot be read.
 
 ### View
 
@@ -114,21 +114,21 @@ To disable the menu button:
 ## Debug
 
 To debug errors:
-- Docker users: `docker logs ha-fusion-revive`
+- Docker users: `docker logs fusion-revive`
 - Inspect frontend issues via the browser's developer console
 
 ---
 
 ## Develop
 
-To contribute to ha-fusion-revive, install Node.js and pnpm. If you're unfamiliar with Svelte, consider the tutorial at <https://learn.svelte.dev>.
+To contribute to Fusion-Revive, install Node.js and pnpm. If you're unfamiliar with Svelte, consider the tutorial at <https://learn.svelte.dev>.
 
 ```bash
 # prerequisites (macos)
 brew install node pnpm
 
 # install
-git clone https://github.com/<YOUR_USER>/ha-fusion-revive.git
+git clone https://github.com/slemens/ha-fusion-revive.git
 cd ha-fusion-revive
 pnpm install
 
@@ -153,6 +153,6 @@ npm run format
 
 ## Acknowledgement
 
-Massive thanks to **matt8707**, the creator of the original ha-fusion project. ha-fusion-revive exists to keep his excellent work alive and usable.
+Massive thanks to **matt8707**, the creator of the original ha-fusion project. Fusion-Revive exists to keep his excellent work alive and usable.
 
 If you enjoy this project, please consider giving it a ⭐ on GitHub!
