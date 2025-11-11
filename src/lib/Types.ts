@@ -168,6 +168,12 @@ export interface DateItem {
 export interface GraphEntityConfig {
 	entity_id?: string;
 	color?: string;
+	alias?: string;
+	scale_mode?: 'auto' | 'zero' | 'custom';
+	scale_min?: number;
+	scale_max?: number;
+	scale_type?: 'linear' | 'log';
+	decimals?: number;
 }
 
 export interface GraphItem {
@@ -181,6 +187,8 @@ export interface GraphItem {
 	scale_mode?: 'auto' | 'zero' | 'custom';
 	scale_min?: number;
 	scale_max?: number;
+	scale_type?: 'linear' | 'log';
+	decimals?: number;
 	hide_mobile?: boolean;
 }
 

@@ -133,6 +133,19 @@
 
 			<Logout />
 
+		<div class="bmc-wrapper">
+			<a
+				class="bmc-link"
+				href="https://buymeacoffee.com/slemens"
+				target="_blank"
+				rel="noreferrer"
+			>
+				<img src="/images/buy-me-a-coffee-default-yellow.png" alt="Buy me a coffee" />
+			</a>
+		</div>
+
+		<p class="bmc-note">Thank you for your support!</p>
+
 			<div class="buttons">
 				<div class="save-container">
 					<button
@@ -196,5 +209,26 @@
 	.save-container {
 		display: flex;
 		align-items: center;
+	}
+
+	.bmc-wrapper {
+		margin: 1.5rem 0;
+		display: flex;
+		justify-content: center;
+	}
+
+	.bmc-link img {
+		max-width: 12rem;
+		height: auto;
+		display: block;
+		filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.25));
+		border-radius: 12px;
+	}
+
+	.bmc-note {
+		text-align: center;
+		margin: 0.4rem 0 1.2rem;
+		opacity: 0.85;
+		font-size: 0.95rem;
 	}
 </style>

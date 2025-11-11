@@ -1,1 +1,5 @@
-locale: en
+locale: de
+token: >-
+  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5NmYyNjAyNzdlYzY0ZTgzYTYwYzNiNDMyZGNhMTM1NyIsImlhdCI6MTc2Mjg1MTE4NSwiZXhwIjoyMDc4MjExMTg1fQ.9ASdEwtvL5nNEIvQxfDQ5QbbSN8_2JQwGvqE06pQj00
+addons:
+  youtube: false

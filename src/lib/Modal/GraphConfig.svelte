@@ -1,22 +1,23 @@
 <script lang="ts">
-	import {
-		dashboard,
-		states,
-		connection,
-		lang,
-		history,
-		historyIndex,
-		record,
-		ripple
-	} from '$lib/Stores';
+import {
+	dashboard,
+	states,
+	connection,
+	lang,
+	history,
+	historyIndex,
+	record,
+	ripple,
+	entityList
+} from '$lib/Stores';
 	import { onDestroy } from 'svelte';
 	import Graph from '$lib/Sidebar/Graph.svelte';
 	import Select from '$lib/Components/Select.svelte';
 	import ConfigButtons from '$lib/Modal/ConfigButtons.svelte';
 	import InputClear from '$lib/Components/InputClear.svelte';
 	import Modal from '$lib/Modal/Index.svelte';
-	import { updateObj, getName } from '$lib/Utils';
-	import type { GraphItem } from '$lib/Types';
+import { updateObj, getName } from '$lib/Utils';
+import type { GraphEntityConfig, GraphItem } from '$lib/Types';
 	import Ripple from 'svelte-ripple';
 	import Icon from '@iconify/svelte';
 
@@ -36,10 +37,20 @@
 	}
 
 	let name = sel?.name;
-	let options: { id: string; label: string; hint?: string }[] = [];
-	let stroke = sel?.stroke;
-	let numberElement: HTMLInputElement;
-	let entitiesInitialized = false;
+type Option = { id: string; label: string; hint?: string };
+
+let statsOptions: Option[] = [];
+let entityOptions: Option[] = [];
+let stroke = sel?.stroke;
+let numberElement: HTMLInputElement;
+let entitiesInitialized = false;
+let statsLoaded = false;
+
+$: entityOptions = statsOptions.length
+	? statsOptions
+	: $entityList
+		? $entityList('sensor')
+		: [];
 
 	const range = {
 		min: 0,
@@ -59,6 +70,29 @@
 		{ id: 'zero', label: $lang('scale_mode_zero') },
 		{ id: 'custom', label: $lang('scale_mode_custom') }
 	];
+
+	const scaleTypeOptions = [
+		{ id: 'linear', label: $lang('scale_type_linear') },
+		{ id: 'log', label: $lang('scale_type_log') }
+	];
+	const decimalRange = { min: 0, max: 6 };
+
+	function handleDecimalsInput(event: Event) {
+		const input = event.target as HTMLInputElement | null;
+		const raw = input?.value ?? '';
+		if (raw === '') {
+			set('decimals');
+			return;
+		}
+
+		const value = Number(raw);
+		if (Number.isNaN(value)) {
+			return;
+		}
+
+		const clamped = Math.max(decimalRange.min, Math.min(decimalRange.max, value));
+		set('decimals', clamped);
+	}
 
 	function minMax(key: string | number | undefined) {
 		return Math.min(Math.max(parseInt(key as string), range.min), range.max);
@@ -80,7 +114,10 @@
 	$: entitySelections = sel?.entities ?? [];
 
 	connection.subscribe(async (conn) => {
-		if (!conn) return;
+		if (!conn) {
+			statsOptions = [];
+			return;
+		}
 
 		try {
 			const [res1, res2]: [any, any] = await Promise.all([
@@ -100,7 +137,7 @@
 					.filter(Boolean)
 			);
 
-			options = list_statistic_ids
+			const mapped = list_statistic_ids
 				.filter((id) => !validate_statistics_set.has(id))
 				.map((item) => {
 					const entity = $states?.[item];
@@ -112,50 +149,97 @@
 					};
 				})
 				.sort((a, b) => a.label.localeCompare(b.label));
+
+			statsOptions = mapped.length ? mapped : [];
 		} catch (err) {
 			console.error(err);
+			statsOptions = [];
 		}
 	});
 
-	function ensureEntities() {
-		if (entitiesInitialized) return;
-		if (!sel?.entities || sel.entities.length === 0) {
-			const fallback = demo || options?.[0]?.id;
-			if (fallback) {
-				set('entities', [{ entity_id: fallback }]);
-			} else {
-				set('entities', [{}]);
-			}
+function ensureEntities() {
+	if (entitiesInitialized) return;
+	if (!sel?.entities || sel.entities.length === 0) {
+		const fallback = demo || entityOptions?.[0]?.id || sel?.entity_id;
+		if (fallback) {
+			set('entities', [{ entity_id: fallback }]);
+		} else {
+			set('entities', [{}]);
 		}
-		entitiesInitialized = true;
 	}
+	entitiesInitialized = true;
+}
 
-	$: if (options?.length && !entitiesInitialized) ensureEntities();
+$: if (!entitiesInitialized) ensureEntities();
 
 	function addEntity() {
-		if (!options?.length) return;
+		if (!entityOptions?.length) return;
 		const entries = sel?.entities ? [...sel.entities] : [];
-		const fallback = options[0]?.id;
-		entries.push({ entity_id: fallback });
-		set('entities', entries);
+		const fallback = entityOptions[0]?.id;
+	entries.push({ entity_id: fallback });
+	set('entities', entries);
+}
+
+function updateEntity(index: number, event: CustomEvent<string | undefined>) {
+	const entries = sel?.entities ? [...sel.entities] : [];
+	entries[index] = { ...(entries[index] || {}), entity_id: event.detail };
+	set('entities', entries);
+}
+
+function removeEntity(index: number) {
+	const entries = sel?.entities ? [...sel.entities] : [];
+	entries.splice(index, 1);
+	if (!entries.length) entries.push({});
+	set('entities', entries);
+}
+
+function getInputValue(event: Event) {
+	const target = event.target as HTMLInputElement | null;
+	return target?.value ?? '';
+}
+
+function updateEntityField<K extends keyof GraphEntityConfig>(
+	index: number,
+	key: K,
+	value?: GraphEntityConfig[K]
+) {
+	const entries = sel?.entities ? [...sel.entities] : [];
+	const current = { ...(entries[index] || {}) };
+
+	if (value === undefined || value === '') {
+		delete current[key];
+	} else {
+		current[key] = value;
 	}
 
-	function updateEntity(index: number, event: CustomEvent<string | undefined>) {
-		const entries = sel?.entities ? [...sel.entities] : [];
-		entries[index] = { ...(entries[index] || {}), entity_id: event.detail };
-		set('entities', entries);
+	entries[index] = current;
+	set('entities', entries);
+}
+
+function updateEntityNumberField<K extends 'scale_min' | 'scale_max' | 'decimals'>(
+	index: number,
+	key: K,
+	value: string
+) {
+	if (!value) {
+		updateEntityField(index, key);
+		return;
 	}
 
-	function removeEntity(index: number) {
-		const entries = sel?.entities ? [...sel.entities] : [];
-		entries.splice(index, 1);
-		if (!entries.length) entries.push({});
-		set('entities', entries);
-	}
+	const numeric = Number(value);
+	if (Number.isNaN(numeric)) return;
 
-	function handleScaleChange(key: 'scale_min' | 'scale_max', value: string) {
-		if (!value) {
-			set(key);
+	if (key === 'decimals') {
+		const clamped = Math.max(decimalRange.min, Math.min(decimalRange.max, Math.round(numeric)));
+		updateEntityField(index, key, clamped as GraphEntityConfig[K]);
+	} else {
+		updateEntityField(index, key, numeric as GraphEntityConfig[K]);
+	}
+}
+
+function handleScaleChange(key: 'scale_min' | 'scale_max', value: string) {
+	if (!value) {
+		set(key);
 			return;
 		}
 
@@ -182,6 +266,8 @@
 				scale_mode={sel?.scale_mode}
 				scale_min={sel?.scale_min}
 				scale_max={sel?.scale_max}
+				scale_type={sel?.scale_type}
+				decimals={sel?.decimals}
 				variant="preview"
 			/>
 		</div>
@@ -212,17 +298,19 @@
 
 		<h2>{$lang('entities')}</h2>
 
-		{#if options?.length}
-			<div class="entities">
-				{#each entitySelections as entity, index (index)}
+		<div class="entities">
+			{#each entitySelections as entity, index (index)}
+				<div class="entity-group">
 					<div class="entity-row">
-						<Select
-							computeIcons={true}
-							{options}
-							placeholder={$lang('sensor')}
-							value={entity?.entity_id}
-							on:change={(event) => updateEntity(index, event)}
-						/>
+						<div class="full-width">
+							<Select
+								computeIcons={true}
+								options={entityOptions}
+								placeholder={$lang('sensor')}
+								value={entity?.entity_id}
+								on:change={(event) => updateEntity(index, event)}
+							/>
+						</div>
 
 						<button
 							class="icon-button"
@@ -234,16 +322,101 @@
 							<Icon icon="mingcute:close-fill" height="18" />
 						</button>
 					</div>
-				{/each}
 
-				<button class="add-entity" on:click={addEntity} use:Ripple={$ripple}>
-					<Icon icon="gridicons:add-outline" height="16" />
-					{$lang('add_entity')}
-				</button>
-			</div>
-		{:else}
-			<p class="hint">{$lang('loading')}</p>
-		{/if}
+					{#if !entityOptions?.length}
+						<p class="hint small">{$lang('loading')}</p>
+					{/if}
+
+					<label class="entity-alias">
+						<span>{$lang('alias')}</span>
+						<InputClear
+							condition={entity?.alias}
+							on:clear={() => updateEntityField(index, 'alias')}
+							let:padding
+						>
+							<input
+								class="input"
+								type="text"
+								placeholder={entity?.entity_id}
+								value={entity?.alias ?? ''}
+								on:input={(event) =>
+									updateEntityField(index, 'alias', getInputValue(event) || undefined)
+								}
+								style:padding
+							/>
+						</InputClear>
+					</label>
+
+					<div class="entity-scaling">
+						<Select
+							options={scaleModeOptions}
+							placeholder={$lang('scaling')}
+							value={entity?.scale_mode || sel?.scale_mode || 'auto'}
+							on:change={(event) => updateEntityField(index, 'scale_mode', event.detail)}
+						/>
+
+						<Select
+							options={scaleTypeOptions}
+							placeholder={$lang('scale_type')}
+							value={entity?.scale_type || sel?.scale_type || 'linear'}
+							on:change={(event) => updateEntityField(index, 'scale_type', event.detail)}
+						/>
+
+						<div class="entity-scale-inputs">
+							<label>
+								<span>{$lang('scale_min')}</span>
+								<input
+									class="input"
+									type="number"
+									step="0.1"
+									placeholder="0"
+									value={entity?.scale_min ?? ''}
+									on:input={(event) =>
+										updateEntityNumberField(index, 'scale_min', getInputValue(event))
+									}
+								/>
+							</label>
+
+							<label>
+								<span>{$lang('scale_max')}</span>
+								<input
+									class="input"
+									type="number"
+									step="0.1"
+									placeholder="100"
+									value={entity?.scale_max ?? ''}
+									on:input={(event) =>
+										updateEntityNumberField(index, 'scale_max', getInputValue(event))
+									}
+								/>
+							</label>
+						</div>
+
+						<div class="entity-scale-inputs">
+							<label>
+								<span>{$lang('decimals')}</span>
+								<input
+									class="input"
+									type="number"
+									min={decimalRange.min}
+									max={decimalRange.max}
+									placeholder="1"
+									value={entity?.decimals ?? ''}
+									on:input={(event) =>
+										updateEntityNumberField(index, 'decimals', getInputValue(event))
+									}
+								/>
+							</label>
+						</div>
+					</div>
+				</div>
+			{/each}
+
+			<button class="add-entity" on:click={addEntity} use:Ripple={$ripple}>
+				<Icon icon="gridicons:add-outline" height="16" />
+				{$lang('add_entity')}
+			</button>
+		</div>
 
 		<h2>{$lang('period')} (data_points)</h2>
 
@@ -265,6 +438,15 @@
 			on:change={(event) => set('scale_mode', event)}
 		/>
 
+		<h2>{$lang('scale_type')}</h2>
+
+		<Select
+			options={scaleTypeOptions}
+			placeholder={$lang('scale_type')}
+			value={sel?.scale_type || 'linear'}
+			on:change={(event) => set('scale_type', event)}
+		/>
+
 		{#if (sel?.scale_mode || 'auto') === 'custom'}
 			<div class="scale-inputs">
 				<label>
@@ -276,10 +458,7 @@
 						placeholder="0"
 						value={sel?.scale_min ?? ''}
 						on:input={(event) =>
-							handleScaleChange(
-								'scale_min',
-								(event.target as HTMLInputElement | null)?.value || ''
-							)
+							handleScaleChange('scale_min', getInputValue(event))
 						}
 					/>
 				</label>
@@ -293,15 +472,24 @@
 						placeholder="100"
 						value={sel?.scale_max ?? ''}
 						on:input={(event) =>
-							handleScaleChange(
-								'scale_max',
-								(event.target as HTMLInputElement | null)?.value || ''
-							)
+							handleScaleChange('scale_max', getInputValue(event))
 						}
 					/>
 				</label>
 			</div>
 		{/if}
+
+		<h2>{$lang('decimals')}</h2>
+
+		<input
+			class="input"
+			type="number"
+			min={decimalRange.min}
+			max={decimalRange.max}
+			placeholder="1"
+			value={sel?.decimals ?? ''}
+			on:input={handleDecimalsInput}
+		/>
 
 		<h2>{$lang('size')}</h2>
 
@@ -342,7 +530,12 @@
 
 <style>
 	.preview {
-		height: 11rem;
+		margin-bottom: 1.25rem;
+		padding: 0 0.5rem;
+	}
+
+	.preview :global(.graph-container) {
+		min-height: 11rem;
 	}
 
 	.entities {
@@ -355,6 +548,47 @@
 		display: flex;
 		gap: 0.5rem;
 		align-items: center;
+	}
+
+	.full-width {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.entity-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		padding: 0.85rem 1rem;
+		border-radius: 0.6rem;
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		background: rgba(255, 255, 255, 0.03);
+	}
+
+	.entity-scaling {
+		display: grid;
+		gap: 0.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+	}
+
+	.entity-scale-inputs {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+		gap: 0.5rem;
+	}
+
+	.entity-scale-inputs label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		font-size: 0.8rem;
+	}
+
+	.entity-alias {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		font-size: 0.85rem;
 	}
 
 	.icon-button {
@@ -391,6 +625,11 @@
 
 	.hint {
 		opacity: 0.6;
+	}
+
+	.hint.small {
+		margin: 0.2rem 0 0;
+		font-size: 0.8rem;
 	}
 
 	.scale-inputs {

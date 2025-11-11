@@ -40,6 +40,9 @@
 		scale_mode={sel?.scale_mode}
 		scale_min={sel?.scale_min}
 		scale_max={sel?.scale_max}
+		scale_type={sel?.scale_type}
+		decimals={sel?.decimals}
+		editable={$editMode}
 		variant="card"
 	/>
 </button>
