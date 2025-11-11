@@ -59,6 +59,8 @@ export let decimals: number | undefined;
 	const palette = ['#7dd3fc', '#f472b6', '#c084fc', '#facc15', '#fb923c', '#34d399', '#f87171'];
 
 	const padding = 8;
+	// zusätzlicher Plot‑Rand rechts, damit die Linie bündig mit der Legende endet
+	const plotRightPadding = 24;
 	const defaultWindow = 2629800 * 1000;
 
 	let start_time = new Date(Date.now() - defaultWindow).toISOString();
@@ -86,7 +88,7 @@ let chartElement: HTMLDivElement | undefined;
 $: tooltipPosition =
 	hoverCoords && width
 		? {
-				left: Math.min(Math.max(hoverCoords.x + 12, 8), width - 8),
+				left: Math.min(Math.max(hoverCoords.x + 12, 8), width - 8 - plotRightPadding),
 				top: Math.max(hoverCoords.y - 56, 8)
 		  }
 		: undefined;
@@ -209,7 +211,7 @@ function getSeriesSettings(entity_id: string): ScaleSettings {
 		width && typeof window !== 'undefined'
 			? scaleTime()
 					.domain(xDomain)
-					.range([padding, Math.max(width - padding, padding + 1)])
+					.range([padding, Math.max(width - padding - plotRightPadding, padding + 1)])
 			: undefined;
 
 	function getFractionDigits(settings?: ScaleSettings) {
@@ -597,7 +599,9 @@ function formatValue(value: number | undefined, fractionDigits: number) {
 	.preview {
 		background: rgba(255, 255, 255, 0.08);
 		border-radius: 0.65rem;
-		padding: 1rem 1.1rem 1.1rem;
+		overflow: hidden;
+		background-clip: padding-box;
+		padding: 1rem 1.4rem 1.1rem;
 		height: 100%;
 		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
 	}
@@ -607,18 +611,24 @@ function formatValue(value: number | undefined, fractionDigits: number) {
 		align-items: baseline;
 		justify-content: space-between;
 		gap: 0.75rem;
+		min-height: 2.25rem;
 	}
 
 	.title {
 		margin: 0;
 		font-weight: 600;
 		font-size: 0.95rem;
+		flex: 1;
 	}
 
 	.subtitle {
 		margin: 0.2rem 0 0;
 		font-size: 0.8rem;
 		opacity: 0.7;
+		min-height: 1.1rem;
+		min-width: 7.5rem;
+		text-align: right;
+		flex-shrink: 0;
 	}
 
 
@@ -632,6 +642,9 @@ function formatValue(value: number | undefined, fractionDigits: number) {
 		position: relative;
 		width: 100%;
 		height: 5.5rem;
+		/* etwas Innenabstand, damit Inhalte nicht an den Rand clippen */
+		padding-right: 1.6rem;
+		padding-bottom: 0.35rem;
 	}
 
 	.card .chart,
@@ -691,6 +704,7 @@ function formatValue(value: number | undefined, fractionDigits: number) {
 	}
 
 	svg {
+		display: block;
 		width: 100%;
 		height: 100%;
 	}
@@ -705,12 +719,14 @@ function formatValue(value: number | undefined, fractionDigits: number) {
 		display: grid;
 		gap: 0.25rem;
 		font-size: 0.82rem;
+		padding-right: 1.2rem; /* Platz für rechten Rand der Karte */
 	}
 
 	.legend-item {
 		display: flex;
 		align-items: center;
-		gap: 0.45rem;
+		gap: 0.35rem;
+		min-width: 0;
 	}
 
 	.dot {
@@ -724,24 +740,34 @@ function formatValue(value: number | undefined, fractionDigits: number) {
 		height: 0.45rem;
 	}
 
-	.legend-text {
-		display: grid;
-		grid-template-columns: 1fr auto;
-		width: 100%;
-		gap: 0.2rem;
-	}
+.legend-text {
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+	width: 100%;
+	min-width: 0;
+}
 
-	.legend-name {
-		opacity: 0.85;
-	}
+.legend-name {
+	opacity: 0.85;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
 	.legend-value {
 		font-variant-numeric: tabular-nums;
 		font-weight: 600;
-	 }
+		white-space: nowrap;
+		align-self: flex-end;
+		width: 100%;
+		text-align: right;
+		padding-right: 1rem; /* Sicherheitsabstand zur rechten Kartenkante */
+	}
+
 
 	.legend-scale {
-		grid-column: 2;
+		margin-left: auto;
 		font-size: 0.7rem;
 		text-transform: uppercase;
 		opacity: 0.6;

@@ -21,15 +21,16 @@
 	}
 </script>
 
-<button
-	type="button"
+<div
+	role="button"
 	class="graph-card"
-	class:interactive={$editMode}
+		class:interactive={$editMode}
 	tabindex={$editMode ? 0 : -1}
 	on:click={handleClick}
 	on:keydown={handleKeydown}
 	use:Ripple={$editMode ? $ripple : undefined}
 	aria-disabled={!$editMode}
+	style="min-height: 100%; width: 100%;"
 >
 	<Graph
 		entities={sel?.entities}
@@ -45,13 +46,16 @@
 		editable={$editMode}
 		variant="card"
 	/>
-</button>
+</div>
 
 <style>
 	.graph-card {
 		all: unset;
 		display: block;
 		height: 100%;
+		width: 100%;
+		border-radius: 0.65rem;
+		overflow: hidden;
 	}
 
 	.interactive {

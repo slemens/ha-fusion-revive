@@ -9,7 +9,9 @@ views:
               - id: 5537527668099
                 type: graph
                 entities:
-                  - entity_id: sensor.tasmota_energy_apparentpower
+                  - entity_id: sensor.casa_lemens_strompreis
+                height_span: 4
+                width_span: 2
               - id: 2051119982455
                 type: button
                 entity_id: sensor.serverschrank_last_restart_time

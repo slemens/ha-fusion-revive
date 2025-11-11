@@ -77,6 +77,19 @@ $: entityOptions = statsOptions.length
 	];
 	const decimalRange = { min: 0, max: 6 };
 
+	const columnSpanOptions = [
+		{ id: '1', label: '1 (compact)' },
+		{ id: '2', label: '2 (default)' },
+		{ id: '3', label: '3 (wide)' }
+	];
+
+	const rowSpanOptions = [
+		{ id: '1', label: '1 (short)' },
+		{ id: '2', label: '2' },
+		{ id: '3', label: '3' },
+		{ id: '4', label: '4 (tall)' }
+	];
+
 	function handleDecimalsInput(event: Event) {
 		const input = event.target as HTMLInputElement | null;
 		const raw = input?.value ?? '';
@@ -417,6 +430,32 @@ function handleScaleChange(key: 'scale_min' | 'scale_max', value: string) {
 				{$lang('add_entity')}
 			</button>
 		</div>
+
+		<h2>Layout (main view)</h2>
+
+		<div class="entity-scale-inputs">
+			<div class="layout-control">
+				<span>Width (columns)</span>
+				<Select
+					options={columnSpanOptions}
+					placeholder="Columns"
+					value={(sel?.width_span ?? 2).toString()}
+					on:change={(event) => set('width_span', Number(event.detail))}
+				/>
+			</div>
+
+			<div class="layout-control">
+				<span>Height (rows)</span>
+				<Select
+					options={rowSpanOptions}
+					placeholder="Rows"
+					value={(sel?.height_span ?? 4).toString()}
+					on:change={(event) => set('height_span', Number(event.detail))}
+				/>
+			</div>
+		</div>
+
+		<p class="hint small">Applies to graph cards placed in the main dashboard grid (not the sidebar).</p>
 
 		<h2>{$lang('period')} (data_points)</h2>
 

@@ -8,8 +8,8 @@
 </script>
 
 <svelte:head>
-	<title>FUSION</title>
-	<meta name="description" content="fusion" />
+	<title>Fusion-Revive</title>
+	<meta name="description" content="Fusion-Revive dashboard for Home Assistant" />
 	<meta charset="utf-8" />
 </svelte:head>
 

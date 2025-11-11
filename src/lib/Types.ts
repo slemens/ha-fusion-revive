@@ -189,6 +189,8 @@ export interface GraphItem {
 	scale_max?: number;
 	scale_type?: 'linear' | 'log';
 	decimals?: number;
+	width_span?: number;
+	height_span?: number;
 	hide_mobile?: boolean;
 }
 

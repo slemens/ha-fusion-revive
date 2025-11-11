@@ -180,11 +180,21 @@
     `;
 	}
 
-	function itemStyles(type: string) {
-		const large = ['conditional_media', 'picture_elements', 'camera', 'graph'];
+	function itemStyles(item: any) {
+		const type = item?.type;
+		const large = ['conditional_media', 'picture_elements', 'camera'];
+
+		let columnSpan = large.includes(type) ? 2 : 1;
+		let rowSpan = large.includes(type) ? 4 : 1;
+
+		if (type === 'graph') {
+			columnSpan = Math.min(Number(item?.width_span) || 2, 4);
+			rowSpan = Math.min(Number(item?.height_span) || 4, 4);
+		}
+
 		return `
-			grid-column: ${large.includes(type) ? 'span 2' : 'span 1'};
-			grid-row: ${large.includes(type) ? 'span 4' : 'span 1'};
+			grid-column: span ${columnSpan};
+			grid-row: span ${rowSpan};
 			display: ${type ? '' : 'none'};
     `;
 	}
@@ -337,7 +347,7 @@
 										class="item"
 										animate:flip={{ duration: $motion }}
 										tabindex="-1"
-										style={itemStyles(item?.type)}
+										style={itemStyles(item)}
 									>
 										<Content {item} sectionName={stackSection?.name} />
 									</div>
@@ -403,7 +413,7 @@
 							class="item"
 							animate:flip={{ duration: $motion }}
 							tabindex="-1"
-							style={itemStyles(item?.type)}
+							style={itemStyles(item)}
 						>
 							<Content {item} sectionName={section?.name} />
 						</div>
@@ -452,6 +462,7 @@
 	.item {
 		position: relative;
 		border-radius: 0.65rem;
+		overflow: visible;
 	}
 
 	/* Phone and Tablet (portrait) */
