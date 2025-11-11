@@ -310,9 +310,14 @@
 							<svelte:component
 								this={Graph}
 								entity_id={item?.entity_id}
+								entities={item?.entities}
 								name={item?.name}
 								period={item?.period}
 								stroke={item?.stroke}
+								scale_mode={item?.scale_mode}
+								scale_min={item?.scale_min}
+								scale_max={item?.scale_max}
+								variant="sidebar"
 							/>
 						</button>
 

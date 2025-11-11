@@ -20,6 +20,7 @@
 	import ConfigButtons from '$lib/Modal/ConfigButtons.svelte';
 	import Ripple from 'svelte-ripple';
 	import PictureElements from '$lib/Main/PictureElements.svelte';
+	import GraphThumbnail from '$lib/Components/GraphThumbnail.svelte';
 
 	export let isOpen: boolean;
 	export let sel: any;
@@ -123,6 +124,14 @@
 				demo: $demo.media_player,
 				sel
 			}
+		},
+		{
+			id: 'graph',
+			type: $lang('graph'),
+			component: GraphThumbnail,
+			props: {
+				variant: 'card'
+			}
 		}
 	];
 
@@ -167,6 +176,12 @@
 
 			case 'empty':
 				openModal(() => import('$lib/Modal/EmptyConfig.svelte'), { sel });
+				break;
+			case 'graph':
+				openModal(() => import('$lib/Modal/GraphConfig.svelte'), {
+					demo: $demo.graph,
+					sel
+				});
 				break;
 			default:
 				openModal(() => import('$lib/Modal/MainItemConfig.svelte'), { sel });

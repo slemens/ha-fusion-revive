@@ -165,13 +165,22 @@ export interface DateItem {
 	hide_mobile?: boolean;
 }
 
+export interface GraphEntityConfig {
+	entity_id?: string;
+	color?: string;
+}
+
 export interface GraphItem {
 	name?: string;
 	type?: string;
 	id?: number;
 	entity_id?: string;
+	entities?: GraphEntityConfig[];
 	period?: string;
 	stroke?: number;
+	scale_mode?: 'auto' | 'zero' | 'custom';
+	scale_min?: number;
+	scale_max?: number;
 	hide_mobile?: boolean;
 }
 

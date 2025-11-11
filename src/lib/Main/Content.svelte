@@ -6,11 +6,12 @@
 	import Camera from '$lib/Main/Camera.svelte';
 	import Configure from '$lib/Main/Configure.svelte';
 	import Empty from '$lib/Main/Empty.svelte';
+	import Graph from '$lib/Main/Graph.svelte';
 
 	export let item: any;
 	export let sectionName: string | undefined = undefined;
 
-	const large = ['conditional_media', 'picture_elements', 'camera'];
+	const large = ['conditional_media', 'picture_elements', 'camera', 'graph'];
 </script>
 
 {#if item?.[SHADOW_ITEM_MARKER_PROPERTY_NAME] && large.includes(item?.type)}
@@ -27,6 +28,8 @@
 	<PictureElements sel={item} />
 {:else if item?.type === 'camera'}
 	<Camera sel={item} responsive={false} muted={true} controls={false} />
+{:else if item?.type === 'graph'}
+	<Graph sel={item} />
 {:else if item?.type === 'empty'}
 	<Empty sel={item} />
 {:else}

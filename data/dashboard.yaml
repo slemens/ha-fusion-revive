@@ -1,298 +1,245 @@
-theme: godis
+views:
+  - name: Lichter
+    id: 1873669160402
+    sections:
+      - type: horizontal-stack
+        sections:
+          - name: Ankleide
+            items:
+              - id: 2396183174885
+                type: button
+                entity_id: light.ankleide
+              - id: 2669410456507
+                type: button
+                entity_id: light.schrankbeleuchtung_outlet_2
+            id: 6376822995143
+          - name: Büro
+            items:
+              - id: 8300902370113
+                type: button
+                entity_id: light.buro
+            id: 9856819740466
+        id: 7941898439942
+      - type: horizontal-stack
+        sections:
+          - name: Badezimmer
+            items:
+              - id: 412366377899
+                type: button
+                entity_id: light.shelly_badezimmer
+            id: 3959386964565
+          - name: ' Flur'
+            items:
+              - id: 6695265411166
+                type: button
+                entity_id: light.shelly_flur_shelly_flur
+              - id: 1383591908751
+                type: button
+                entity_id: light.shelly_haustur_shelly_haustur
+            id: 651912365858
+        id: 8280236315123
+      - type: horizontal-stack
+        sections:
+          - name: HWR
+            items:
+              - id: 961110936396
+                type: button
+                entity_id: light.shelly_hwr
+            id: 9440356946722
+          - name: Esszimmer
+            items:
+              - id: 5719733261547
+                type: button
+                entity_id: light.esszimmergruppe
+              - id: 2653529187099
+                type: button
+                entity_id: light.shelly_esszimmer_esstisch
+              - id: 5467826549345
+                type: button
+                entity_id: light.stehlampegruppe
+            id: 3577236250177
+        id: 3742018500463
+      - type: horizontal-stack
+        sections:
+          - name: Küche
+            items:
+              - id: 1835737675168
+                type: button
+                entity_id: light.kuche
+            id: 1441386064810
+          - name: Wohnzimmer
+            items:
+              - id: 7506448762782
+                type: button
+                entity_id: light.wohnzimmergruppe
+              - id: 427167833444
+                type: button
+                entity_id: light.couchlampe
+              - id: 9393102636711
+                type: button
+                entity_id: light.lightstrip_wohnwand_2
+              - id: 4266364164601
+                type: button
+                entity_id: light.dekolampegruppe
+            id: 8483138012177
+        id: 7255216606210
+      - type: horizontal-stack
+        sections:
+          - name: Garten
+            items:
+              - id: 4124381799364
+                type: button
+                entity_id: light.terrassegruppe
+              - id: 8502118967784
+                type: button
+                entity_id: light.gartenbeleuchtung_steckdose_1
+              - id: 3997847570950
+                type: button
+                entity_id: light.girlande_steckdose_1
+              - id: 2224823865325
+                type: button
+                entity_id: light.shelly_holzhutte
+            id: 9028921340177
+          - name: Schlafzimmer
+            items:
+              - id: 5761586965956
+                type: button
+                entity_id: light.schlafzimmer
+              - id: 8050308192367
+                type: button
+                entity_id: light.bettbeleuchtung_outlet
+            id: 5634819449139
+        id: 3548247633902
+      - name: Energie
+        items:
+          - id: 5123456789011
+            type: graph
+            name: Verbrauch & Preis
+            period: day
+            stroke: 2
+            scale_mode: custom
+            scale_min: 0
+            scale_max: 100
+            entities:
+              - entity_id: sensor.tibber_pulse_casa_lemens_leistung
+              - entity_id: sensor.casa_lemens_strompreis
+        id: 5123456789012
+    icon: mdi-light:lightbulb-on
+  - name: Garagen
+    id: 9149433930712
+    sections:
+      - name: Garagen
+        items:
+          - id: 8467488690967
+            type: button
+            entity_id: cover.technikgarage_tur_1
+          - id: 9360760184358
+            type: button
+            entity_id: cover.doppelgarage_tur_1
+        id: 3798742283053
+  - name: Rolläden
+    id: 8631677212564
+    sections:
+      - name: Wohnzimmer
+        items:
+          - id: 4373457194138
+            type: button
+            entity_id: cover.wohnzimmer_oben
+            name: Rolladen oben
+          - id: 7079097480646
+            type: button
+            entity_id: cover.wohnzimmer_unten
+            name: Rolladen unten
+          - id: 7221243838161
+            type: button
+            entity_id: cover.jalousie_garten
+          - id: 5512369279630
+            type: button
+            entity_id: cover.jalousie_terrasse
+        id: 7303254814594
+      - name: Küche
+        items:
+          - id: 1014084699294
+            type: button
+            entity_id: cover.kueche_fenter
+          - id: 5552647281373
+            type: button
+            entity_id: cover.kueche_tuer
+            name: Küche Tür
+        id: 4419171880086
+  - name: Thermostate
+    id: 2421729603082
+    sections:
+      - name: Klimaanlage
+        items:
+          - id: 3634235102759
+            type: button
+            entity_id: climate.klima_schlafzimmer
+        id: 4819940576443
+      - name: Heizungen
+        items:
+          - id: 755002462312
+            type: button
+            entity_id: climate.wohnzimmer
+          - id: 7125438294481
+            type: button
+            entity_id: climate.schlafzimmer
+          - id: 7148104882011
+            type: button
+            entity_id: climate.kuche
+          - id: 8698385844315
+            type: button
+            entity_id: climate.flur
+          - id: 5723410981039
+            type: button
+            entity_id: climate.esszimmer
+          - id: 6420595069357
+            type: button
+            entity_id: climate.buro
+          - id: 1703355630993
+            type: button
+            entity_id: climate.badezimmer_og
+          - id: 9571902437586
+            type: button
+            entity_id: climate.badezimmer
+          - id: 8389172239213
+            type: button
+            entity_id: climate.ankleide
+        id: 3412161952500
+sidebar:
+  - id: 9083092980893
+    type: time
+  - id: 7961309862231
+    type: weather_forecast
+    entity_id: weather.forecast_home
+    icon_pack: meteocons
+  - id: 6692355517585
+    type: camera
+    entity_id: camera.192_168_1_223
+  - id: 4332454825967
+    type: graph
+    entities:
+      - entity_id: sensor.tibber_pulse_casa_lemens_leistung
+    name: Stromverbrauch Netz
+    period: day
+    scale_mode: zero
+  - id: 4685274335262
+    type: graph
+    entities:
+      - entity_id: sensor.casa_lemens_strompreis
+    stroke: 2
+    period: day
+    name: Strompreis
+    scale_mode: custom
+    scale_min: 0
+    scale_max: 100
+  - id: 9636498235667
+    type: graph
+    entities:
+      - entity_id: sensor.oilfox_ow8445661385_filllevelquantity
+    name: Heizöl
+    period: day
+    stroke: 2
+theme: muted
 hide_views: false
 hide_sidebar: false
-sidebarWidth: 391
-views:
-  - name: Hemma
-    id: 6467602449648
-    sections:
-      - type: horizontal-stack
-        id: 5078078976670
-        sections:
-          - name: Test
-            id: 2171067078835
-            items:
-              - type: button
-                entity_id: light.studio_dator
-                id: 5008685947164
-              - type: button
-                entity_id: light.vardagsrum
-                id: 6094154428386
-                name: Belysning
-              - type: button
-                entity_id: light.vardagsrum_horna
-                color: '#1cd760'
-                marquee: true
-                id: 4795962599238
-                name: Hörnlampa
-              - type: button
-                entity_id: media_player.sony_bravia_tv
-                id: 7351468287678
-              - type: button
-                id: 3728122340522
-                entity_id: switch.deltaco_sh_p01_socket
-          - name: Studio
-            id: 9828119797472
-            items:
-              - type: button
-                entity_id: light.studio_group
-                id: 3316142550855
-              - type: button
-                entity_id: switch.imac
-                id: 3575493192177
-              - type: button
-                entity_id: switch.gosund_monitors_switch
-                id: 8082348418851
-                icon: material-symbols:speaker
-      - type: horizontal-stack
-        id: 4240433563768
-        sections:
-          - name: Media
-            id: 7859955675791
-            items:
-              - type: media
-                id: 5276106620601
-                conditional:
-                  - entity_id: sensor.plex_recently_added
-                    name: Senast tillagt
-                    icon: mdi:plex
-                    color: orange
-                  - entity_id: media_player.vardagsrum
-                  - entity_id: media_player.sovrum
-                  - entity_id: media_player.spotify
-                    icon: mdi:spotify
-                  - entity_id: media_player.kok
-          - name: Övrigt
-            items:
-              - type: button
-                id: 4326750373921
-                entity_id: light.badrum_group
-              - type: button
-                id: 6654837792944
-                entity_id: switch.gosund_fan_switch
-                icon: mdi:fan
-              - type: button
-                id: 9182560073626
-                entity_id: light.garderob_lampa
-                name: Garderob
-                icon: material-symbols:door-front-sharp
-              - type: button
-                id: 6583508288448
-                entity_id: light.hall_group
-                name: Hall
-              - type: button
-                entity_id: light.sovrum_group
-                id: 4536918822520
-              - type: button
-                entity_id: climate.ac
-                marquee: true
-                id: 2763550457343
-                name: Klimat
-              - type: button
-                entity_id: switch.ps5_635_power
-                color: '#1cd760'
-                marquee: true
-                id: 8427787269294
-                name: Playstation
-              - type: button
-                entity_id: media_player.samsung
-                id: 1503994513807
-            id: 7274165372538
-      - name: Hemma
-        items:
-          - type: button
-            id: 5560216674913
-            entity_id: person.matte
-            icon: fluent-emoji-flat:alien
-          - type: button
-            id: 8128083996424
-            entity_id: person.sanja
-          - type: button
-            id: 3574383219011
-            entity_id: script.home_leave
-            icon: fluent:hand-wave-20-filled
-          - type: button
-            id: 3827902926530
-            entity_id: script.home_arrive
-            icon: material-symbols:home-rounded
-        id: 1412018494330
-  - name: Entities
-    icon: material-symbols:filter-list-rounded
-    id: 5813909951190
-    sections:
-      - name: Test
-        items:
-          - type: button
-            id: 3188058166584
-            entity_id: timer.test
-            name: Timer
-          - type: button
-            id: 4014538054364
-            entity_id: update.hacs_update
-            name: Update
-          - type: button
-            id: 1542804203536
-            entity_id: vacuum.morty
-            name: Vacuum
-          - type: button
-            id: 6145994572695
-            entity_id: weather.smhi_home
-            name: Weather
-          - type: button
-            id: 1443718504784
-            entity_id: zone.home
-            name: Zone
-          - type: button
-            id: 8859082285036
-            entity_id: sun.sun
-          - type: button
-            id: 3600633343715
-            entity_id: switch.galaxy_tab_a_screensaver
-            name: Switch
-          - type: button
-            id: 8233675559365
-            entity_id: sensor.badrum_motion_battery
-            name: Sensor
-          - type: button
-            id: 7404639096964
-            entity_id: select.conditional_media
-            name: Select
-          - type: button
-            id: 8625756439435
-            entity_id: script.home_arrive
-            name: Script
-          - type: button
-            id: 5713628080695
-            entity_id: scene.home_below_horizon
-            name: Scene
-          - type: button
-            id: 4572210401136
-            entity_id: remote.vardagsrum
-            name: Remote
-          - type: button
-            id: 4275494337776
-            entity_id: person.matte
-            name: Person
-          - type: button
-            id: 6609447826960
-            entity_id: number.galaxy_tab_a_screensaver_brightness
-            name: Number
-          - type: button
-            id: 8822164265367
-            entity_id: media_player.tablet
-            name: Media player
-          - type: button
-            id: 6295149030308
-            entity_id: light.studio_dator
-            name: Light
-          - type: button
-            id: 9445324699683
-            entity_id: input_number.monitors_volume
-            name: Input number
-          - type: button
-            id: 2832875690525
-            entity_id: input_datetime.sleep_notify_torrent
-            name: Input Datetime
-          - type: button
-            id: 5329753290519
-            entity_id: input_boolean.imac_lock
-            name: Input boolean
-          - type: button
-            id: 8154800117105
-            entity_id: event.badrum_dimmer_button_1
-            name: Event
-          - type: button
-            id: 6399086292020
-            entity_id: image.template_image
-            name: Image
-          - type: button
-            id: 8970334871265
-            entity_id: device_tracker.iphone
-            name: Device tracker
-          - type: button
-            id: 5981318553491
-            entity_id: climate.ac
-            name: Climate
-          - type: button
-            name: Automation
-            id: 1477424416058
-            entity_id: automation.backup_ha_monthly
-          - type: button
-            name: Binary sensor
-            id: 1045768288013
-            entity_id: binary_sensor.galaxy_tab_a_device_admin
-          - type: button
-            id: 7826433574180
-            entity_id: button.galaxy_tab_a_load_start_url
-            name: Button
-          - type: button
-            name: Calendar
-            id: 8928742612730
-            entity_id: calendar.home_assistant_devs
-          - type: button
-            name: Camera
-            id: 4466621036589
-            entity_id: camera.ipcam
-        id: 3178723045273
-sidebar:
-  - type: time
-    id: 3781246197457
-    hour12: false
-    seconds: false
-  - type: date
-    format: test
-    hide: none
-    shortday: false
-    shortmonth: false
-    id: 2790676345913
-  - type: template
-    id: 1506524483596
-    template: <b>Vecka {{ now().strftime("%W") }}</b>
-  - type: sensor
-    entity_id: sensor.template_greet
-    date: false
-    id: 2790676343773
-  - type: weather
-    entity_id: weather.openweathermap
-    weather_sensor: sensor.openweathermap_weather
-    extra_sensor: sensor.openweathermap_forecast_precipitation_probability
-    extra_sensor_icon: mdi:drop
-    icon_pack: meteocons
-    id: 2790676343766
-  - type: divider
-    id: 6627143742873
-  - type: sensor
-    entity_id: sensor.template_laundry
-    id: 2790676343722
-  - type: sensor
-    entity_id: sensor.template_vacuum
-    id: 2790676343733
-  - type: sensor
-    entity_id: sensor.template_mailbox
-    id: 2790676343744
-    date: false
-  - type: sensor
-    entity_id: sensor.template_battery
-    id: 2790676343711
-  - type: navigate
-    id: 4055198699454
-  - type: timer
-    entity_id: timer.test
-    id: 5786160817081
-  - type: divider
-    id: 3349273168863
-  - type: radial
-    entity_id: sensor.processor_use
-    id: 1790176343741
-    stroke: 7
-    name: CPU
-  - id: 2805049029311
-    entity_id: sensor.memory_use_percent
-    type: bar
-    name: RAM
-    math: '22'
-  - type: graph
-    id: 7932142060181
-    period: day
-    entity_id: sensor.memory_use_percent
-    stroke: 2

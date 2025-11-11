@@ -1,18 +1,24 @@
-# ha-fusion
+# ha-fusion-revive
 
-A modern, easy-to-use and performant custom [Home Assistant](https://www.home-assistant.io/) dashboard
+A modern, easy-to-use and performant fork of the original **ha-fusion** [Home Assistant](https://www.home-assistant.io/) dashboard.
+
+I created this fork because ha-fusion remains one of the most elegant and powerful dashboards for Home Assistant. Since the original maintainer (matt8707) no longer has time to actively continue development, **ha-fusion-revive** aims to keep the project alive, resolve issues, modernize areas of the codebase, and introduce improvements that many of us have been missing.
+
+I am not a full-time developer — just a passionate Home Assistant user — but I try my best in my free time to add meaningful features and improvements for myself and for everyone else who enjoys ha-fusion.
 
 <https://www.youtube.com/watch?v=D8mWruSuPOM>
 
 [![preview](/static/preview.png)](https://www.youtube.com/watch?v=D8mWruSuPOM)
 
-If you find this project useful, be sure to 🌟 this repository! If you love it, please consider donating! ❤️ <https://www.paypal.com/paypalme/matt8707>
+If you find this project useful, be sure to ⭐ this repository!
+
+[![Buy Me A Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=slemens&button_colour=FFDD00&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=ffffff)](https://buymeacoffee.com/slemens)
 
 ---
 
 ## 📣 Pre-beta
 
-The current state of this project is **pre-beta**. This means that there's basic functionality missing, incomplete features and unresolved issues. General feedback, bug reports and feature requests are welcome!
+The current state of this project is **pre-beta**. This means that some functionality may be incomplete, missing, or unstable. Feedback, bug reports and feature requests are very welcome.
 
 ---
 
@@ -20,79 +26,76 @@ The current state of this project is **pre-beta**. This means that there's basic
 
 ### Add-on
 
-For "Operating System" or "Supervised" installation methods, you can install ha-fusion as an add-on:
+The original ha-fusion add-on is **not continued** in this fork. Since I personally use Docker exclusively, I cannot test or maintain an add-on version at this time.
 
-1. **Add Repository**: To begin, add the ha-fusion add-on repository to your Home Assistant instance. Click the button below or manually add the repository using this URL: <https://github.com/matt8707/addon-ha-fusion>.
-
-   [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fmatt8707%2Faddon-ha-fusion)
-
-2. **Install Add-on**: After adding the repository, refresh the add-on store page. Locate ha-fusion in the list and proceed with the installation.
+If contributors are interested in helping revive and maintain the add-on, it may be added later.
 
 ---
 
 ### Docker
 
-If you're using the "Container" or "Core" installation methods, ha-fusion can be installed via Docker:
+If you're using the "Container" or "Core" installation methods, ha-fusion-revive can be installed via Docker.
 
-1. **Docker Compose File**: Place your edited copy of the [docker-compose.yml](https://github.com/matt8707/ha-fusion/blob/main/docker-compose.yml) file in a suitable directory.
+1. **Docker Compose File**: Place your edited copy of the `docker-compose.yml` from this repository in a suitable directory.
 
 2. **Create Container**:
-   Run the following commands in your terminal to start the container:
 
-   ```bash
-   cd path/to/docker-compose.yml
-   docker-compose up -d ha-fusion
-   ```
+```bash
+cd path/to/docker-compose.yml
+docker-compose up -d ha-fusion-revive
+```
 
 #### Update
 
-To update to the latest version of ha-fusion, run the following commands:
-
 ```bash
-docker-compose pull ha-fusion
-docker-compose up -d ha-fusion
+docker-compose pull ha-fusion-revive
+docker-compose up -d ha-fusion-revive
 ```
 
 <details>
-<summary>
-   <b>Other</b>
-</summary>
+<summary><b>Other</b></summary>
 
-Without docker-compose, updating the container involves additional steps. For each update, it's necessary to first stop the current container, remove it, pull the new image, and then execute the docker run command again.
+Without docker-compose, updating requires stopping and removing the current container, pulling the new image, and running the container again.
 
 ```bash
 docker run -d \
-  --name ha-fusion \
+  --name ha-fusion-revive \
   --network bridge \
   -p 5050:5050 \
-  -v /path/to/ha-fusion:/app/data \
-  -e TZ=Europe/Stockholm \
-  -e HASS_URL=http://192.168.1.241:8123 \
+  -v /path/to/ha-fusion-revive:/app/data \
+  -e TZ=Europe/Berlin \
+  -e HASS_URL=http://192.168.1.X:8123 \
   --restart always \
-  ghcr.io/matt8707/ha-fusion
+  ghcr.io/<YOUR_USER>/ha-fusion-revive
 ```
 
 #### Kubernetes
 
-If you prefer to use Kubernetes, see [Chart README.md](https://github.com/matt8707/ha-fusion/tree/167c320918544416e2f9272e1edad64b7329269a/charts/ha-fusion)
+A Helm chart may be added in the future.
 
 </details>
 
-...
-
 ---
 
-## Query strings
+## Query Strings
 
-These will only function if you have exposed a port in the add-on configuration or by using Docker. Note that when using Ingress, query strings cannot be read.
+These will only function if ha-fusion-revive is exposed via a direct port (Docker). When using Ingress, query strings cannot be read.
 
 ### View
 
-To set a particular view when the page loads, add the "view" parameter. For example, if you have a "Bedroom" view, append the query string `?view=Bedroom` to the URL.
+To set a specific view when the page loads:
+
+```
+?view=Bedroom
+```
 
 ### Menu
 
-To disable the menu button, append the query string `?menu=false` to the URL. This is useful when you want to avoid unwanted changes to your dashboard, such as on wall-mounted tablets.
+To disable the menu button:
+
+```
+?menu=false
+```
 
 ---
 
@@ -110,21 +113,23 @@ To disable the menu button, append the query string `?menu=false` to the URL. Th
 
 ## Debug
 
-To debug any errors, check the "Log" tab if you're using the addon, or use `docker logs ha-fusion` for Docker setups. To inspect frontend issues, open the browser's console.
+To debug errors:
+- Docker users: `docker logs ha-fusion-revive`
+- Inspect frontend issues via the browser's developer console
 
 ---
 
 ## Develop
 
-To begin contributing to the project, you'll first need to install node. It's also recommended to install pnpm. If you're unfamiliar with Svelte, consider doing the tutorial at <https://learn.svelte.dev>
+To contribute to ha-fusion-revive, install Node.js and pnpm. If you're unfamiliar with Svelte, consider the tutorial at <https://learn.svelte.dev>.
 
 ```bash
 # prerequisites (macos)
 brew install node pnpm
 
 # install
-git clone https://github.com/matt8707/ha-fusion.git
-cd ha-fusion
+git clone https://github.com/<YOUR_USER>/ha-fusion-revive.git
+cd ha-fusion-revive
 pnpm install
 
 # environment
@@ -143,3 +148,11 @@ npm run check
 npm run lint
 npm run format
 ```
+
+---
+
+## Acknowledgement
+
+Massive thanks to **matt8707**, the creator of the original ha-fusion project. ha-fusion-revive exists to keep his excellent work alive and usable.
+
+If you enjoy this project, please consider giving it a ⭐ on GitHub!

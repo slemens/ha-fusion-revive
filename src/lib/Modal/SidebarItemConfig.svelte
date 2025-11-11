@@ -29,12 +29,12 @@
 	import Image from '$lib/Sidebar/Image.svelte';
 	import Camera from '$lib/Main/Camera.svelte';
 	import History from '$lib/Sidebar/History.svelte';
-	import Graph from '$lib/Sidebar/Graph.svelte';
 	import Template from '$lib/Sidebar/Template.svelte';
 	import Timer from '$lib/Sidebar/Timer.svelte';
 	import ConfigButtons from '$lib/Modal/ConfigButtons.svelte';
 	import Radial from '$lib/Sidebar/Radial.svelte';
 	import Notifications from '$lib/Sidebar/Notifications.svelte';
+	import GraphThumbnail from '$lib/Components/GraphThumbnail.svelte';
 	import Ripple from 'svelte-ripple';
 
 	export let isOpen: boolean;
@@ -176,9 +176,9 @@
 		{
 			id: 'graph',
 			type: $lang('graph'),
-			component: Graph,
+			component: GraphThumbnail,
 			props: {
-				entity_id: $demo.graph
+				variant: 'card'
 			}
 		},
 		{

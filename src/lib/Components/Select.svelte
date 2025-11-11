@@ -34,7 +34,7 @@
 	let scrollToAlignment: Alignment = 'auto';
 
 	const scrollToBehaviour: ScrollBehaviour = 'instant';
-	const itemSize = 50;
+	const itemSize = 64;
 	const maxHeight = itemSize * 7;
 	const overscanCount = 7;
 
@@ -325,12 +325,12 @@
 
 	.item {
 		display: flex;
-		align-items: center;
-		padding-left: 1rem;
+		align-items: flex-start;
+		padding: 0.65rem 1rem;
 		cursor: pointer;
 		gap: 0.9rem;
 		font-size: 0.95rem;
-		height: 100%;
+		min-height: 3.6rem;
 	}
 
 	.item-icon {
@@ -343,7 +343,8 @@
 	.label {
 		display: grid;
 		gap: 0.2rem;
-		overflow: hidden;
+		white-space: normal;
+		word-break: break-word;
 	}
 
 	.name {
